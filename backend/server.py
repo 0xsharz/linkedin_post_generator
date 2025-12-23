@@ -98,7 +98,8 @@ async def generate_linkedin_post(request: GeneratePostRequest):
     try:
         n8n_webhook_url = "https://n8n.srv1217218.hstgr.cloud/webhook/linkgen"
         
-        async with httpx.AsyncClient(timeout=60.0) as client:
+        # Increased timeout to 180 seconds (3 minutes) for long-running n8n workflows
+        async with httpx.AsyncClient(timeout=180.0) as client:
             response = await client.post(
                 n8n_webhook_url,
                 json={"blog_url": request.blog_url}
