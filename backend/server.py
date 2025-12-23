@@ -93,9 +93,10 @@ async def get_status_checks():
 async def generate_linkedin_post(request: GeneratePostRequest):
     """
     Generate LinkedIn post from blog URL by calling n8n webhook
+    n8n webhook URL is kept server-side for security
     """
     try:
-        n8n_webhook_url = "https://n8n.srv1217218.hstgr.cloud/webhook-test/linkgen"
+        n8n_webhook_url = "https://n8n.srv1217218.hstgr.cloud/webhook/linkgen"
         
         async with httpx.AsyncClient(timeout=60.0) as client:
             response = await client.post(

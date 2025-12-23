@@ -15,14 +15,11 @@ html {
 }
 
 body {
-  background-color: #F8FAFC;
-}
-
-body.dark {
-  background-color: #020617;
+  background-color: #FAFAFA;
+  color: #0F172A;
 }
 
 ::selection {
-  background-color: #2563EB;
+  background-color: #4338CA;
   color: white;
 }
