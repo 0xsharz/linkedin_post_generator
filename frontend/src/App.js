@@ -5,7 +5,7 @@ import { Toaster } from "./components/ui/sonner";
 function App() {
   return (
     <div className="App">
-      <Toaster position="top-right" />
+      <Toaster position="top-right" richColors />
       <PostGenerator />
     </div>
   );
