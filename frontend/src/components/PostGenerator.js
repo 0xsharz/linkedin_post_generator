@@ -30,14 +30,16 @@ const PostGenerator = () => {
     }
   };
 
-  const handleGenerate = async () => {
+  const handleGenerate = async (e) => {
+    if (e) e.preventDefault();
+    
     if (!blogUrl.trim()) {
       toast.error('Please enter a blog URL');
       return;
     }
 
     if (!validateUrl(blogUrl)) {
-      toast.error('Please enter a valid URL starting with http:// or https://');
+      toast.error('Invalid URL format. Please enter a valid URL starting with http:// or https://');
       return;
     }
 
