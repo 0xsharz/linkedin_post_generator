@@ -3,50 +3,50 @@
     "total_tests": 7,
     "passed_tests": 6,
     "success_rate": "85.7%",
-    "timestamp": "2025-12-23T18:37:35.824262"
+    "timestamp": "2025-12-23T18:44:16.165402"
   },
   "test_results": [
     {
       "test": "API Root",
       "status": "PASS",
       "details": "Status: 200, Response: {\n  \"message\": \"LinkedIn Post Generator API\"\n}...",
-      "timestamp": "2025-12-23T18:37:34.659277"
+      "timestamp": "2025-12-23T18:44:14.915951"
     },
     {
       "test": "Get Status Checks",
       "status": "PASS",
       "details": "Status: 200, Response: [\n  {\n    \"id\": \"39b24438-539a-4a5b-93a5-717f380f1532\",\n    \"client_name\": \"test_client_183221\",\n    \"timestamp\": \"2025-12-23T18:32:21.531701Z\"\n  },\n  {\n    \"id\": \"8abba8c1-a210-4412-80bd-f411dd96332f...",
-      "timestamp": "2025-12-23T18:37:34.697508"
+      "timestamp": "2025-12-23T18:44:15.045349"
     },
     {
       "test": "Create Status Check",
       "status": "PASS",
-      "details": "Status: 200, Response: {\n  \"id\": \"c4c29c33-47b4-43bd-a7ce-4a2b89512cad\",\n  \"client_name\": \"test_client_183734\",\n  \"timestamp\": \"2025-12-23T18:37:34.729072Z\"\n}...",
-      "timestamp": "2025-12-23T18:37:34.775184"
+      "details": "Status: 200, Response: {\n  \"id\": \"00f54f62-c87d-4b18-986e-3fe75bcdb973\",\n  \"client_name\": \"test_client_184415\",\n  \"timestamp\": \"2025-12-23T18:44:15.101089Z\"\n}...",
+      "timestamp": "2025-12-23T18:44:15.108812"
     },
     {
       "test": "CORS Configuration",
       "status": "PASS",
       "details": "Status: 200, CORS Headers: {'Access-Control-Allow-Origin': 'http://localhost:3000', 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type'}",
-      "timestamp": "2025-12-23T18:37:34.854107"
+      "timestamp": "2025-12-23T18:44:15.161500"
     },
     {
       "test": "Generate Post - Missing URL",
       "status": "PASS",
       "details": "Status: 422, Response: {\n  \"detail\": [\n    {\n      \"type\": \"missing\",\n      \"loc\": [\n        \"body\",\n        \"blog_url\"\n      ],\n      \"msg\": \"Field required\",\n      \"input\": {},\n      \"url\": \"https://errors.pydantic.dev/2....",
-      "timestamp": "2025-12-23T18:37:34.930309"
+      "timestamp": "2025-12-23T18:44:15.207836"
     },
     {
       "test": "Generate Post - Invalid URL",
       "status": "PASS",
       "details": "Status: 422, Response: {\n  \"detail\": [\n    {\n      \"type\": \"value_error\",\n      \"loc\": [\n        \"body\",\n        \"blog_url\"\n      ],\n      \"msg\": \"Value error, Invalid URL format. Please provide a valid blog URL starting wi...",
-      "timestamp": "2025-12-23T18:37:34.970875"
+      "timestamp": "2025-12-23T18:44:15.255705"
     },
     {
       "test": "Generate Post - Real Webhook",
       "status": "FAIL",
-      "details": "Expected 200, got 521. Error: {'detail': 'n8n webhook is not available. Please ensure the webhook is activated in n8n workflow (not in test mode).'}",
-      "timestamp": "2025-12-23T18:37:35.823293"
+      "details": "Expected 200, got 520. Error: {'detail': 'An unexpected error occurred while generating the post. Please try again.'}",
+      "timestamp": "2025-12-23T18:44:16.164252"
     }
   ]
 }
