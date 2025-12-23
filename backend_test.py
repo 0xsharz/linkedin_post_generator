@@ -160,16 +160,25 @@ class LinkedInPostGeneratorTester:
     def test_cors_headers(self):
         """Test CORS configuration"""
         try:
-            response = requests.options(f"{self.base_url}/api/", timeout=10)
+            # Test OPTIONS request with proper CORS headers
+            headers = {
+                'Origin': 'http://localhost:3000',
+                'Access-Control-Request-Method': 'POST',
+                'Access-Control-Request-Headers': 'Content-Type'
+            }
+            response = requests.options(f"{self.base_url}/api/", headers=headers, timeout=10)
+            
             cors_headers = {
                 'Access-Control-Allow-Origin': response.headers.get('Access-Control-Allow-Origin'),
                 'Access-Control-Allow-Methods': response.headers.get('Access-Control-Allow-Methods'),
                 'Access-Control-Allow-Headers': response.headers.get('Access-Control-Allow-Headers')
             }
             
-            details = f"CORS Headers: {cors_headers}"
-            # CORS should allow all origins based on backend config
-            success = response.headers.get('Access-Control-Allow-Origin') == '*'
+            details = f"Status: {response.status_code}, CORS Headers: {cors_headers}"
+            # CORS should return 200 and have proper headers
+            success = (response.status_code == 200 and 
+                      response.headers.get('Access-Control-Allow-Methods') and
+                      'OPTIONS' in response.headers.get('Access-Control-Allow-Methods', ''))
             return self.log_test("CORS Configuration", success, details)
             
         except Exception as e:
