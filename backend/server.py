@@ -120,9 +120,23 @@ async def generate_linkedin_post(request: GeneratePostRequest):
                     detail=f"n8n webhook returned invalid JSON response: {response.text[:200]}"
                 )
             
-            post_body = data.get('post_body', '')
-            hashtags = data.get('hashtags', '')
-            full_post = data.get('full_post', f"{post_body}\n\n{hashtags}")
+            # Handle if n8n returns a list (take first item) or dict
+            if isinstance(data, list):
+                if len(data) == 0:
+                    raise HTTPException(
+                        status_code=502, 
+                        detail="n8n webhook returned an empty list"
+                    )
+                data = data[0]
+            
+            # Extract fields from the response
+            post_body = data.get('post_body', data.get('body', ''))
+            hashtags = data.get('hashtags', data.get('tags', ''))
+            full_post = data.get('full_post', '')
+            
+            # If full_post is empty, combine post_body and hashtags
+            if not full_post and (post_body or hashtags):
+                full_post = f"{post_body}\n\n{hashtags}" if hashtags else post_body
             
             return GeneratePostResponse(
                 post_body=post_body,
