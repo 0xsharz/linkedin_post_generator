@@ -117,11 +117,36 @@ async def generate_linkedin_post(request: GeneratePostRequest):
             )
             
     except httpx.TimeoutException:
-        raise HTTPException(status_code=408, detail="Request to n8n webhook timed out")
+        raise HTTPException(
+            status_code=408, 
+            detail="Request timed out. The blog might be too large or the service is slow. Please try again."
+        )
     except httpx.HTTPStatusError as e:
-        raise HTTPException(status_code=e.response.status_code, detail=f"n8n webhook error: {str(e)}")
+        error_detail = "Unable to generate LinkedIn post"
+        
+        if e.response.status_code == 404:
+            error_detail = "n8n webhook is not available. Please ensure the webhook is activated in n8n workflow (not in test mode)."
+        elif e.response.status_code >= 500:
+            error_detail = "n8n service is currently unavailable. Please try again later."
+        else:
+            try:
+                error_data = e.response.json()
+                error_detail = error_data.get('message', str(e))
+            except:
+                error_detail = str(e)
+        
+        raise HTTPException(status_code=502, detail=error_detail)
+    except httpx.RequestError as e:
+        raise HTTPException(
+            status_code=503, 
+            detail="Unable to connect to the post generation service. Please check your internet connection and try again."
+        )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to generate LinkedIn post: {str(e)}")
+        logger.error(f"Unexpected error in generate_linkedin_post: {str(e)}")
+        raise HTTPException(
+            status_code=500, 
+            detail="An unexpected error occurred while generating the post. Please try again."
+        )
 
 
 app.include_router(api_router)
