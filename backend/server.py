@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -6,29 +6,25 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List
+from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
+import httpx
 
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# Create the main app without a prefix
 app = FastAPI()
-
-# Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
 
-# Define Models
 class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
+    model_config = ConfigDict(extra="ignore")
     
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     client_name: str
@@ -37,17 +33,24 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
-# Add your routes to the router instead of directly to app
+class GeneratePostRequest(BaseModel):
+    blog_url: str
+
+class GeneratePostResponse(BaseModel):
+    post_body: str
+    hashtags: str
+    full_post: str
+
+
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "LinkedIn Post Generator API"}
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
     status_dict = input.model_dump()
     status_obj = StatusCheck(**status_dict)
     
-    # Convert to dict and serialize datetime to ISO string for MongoDB
     doc = status_obj.model_dump()
     doc['timestamp'] = doc['timestamp'].isoformat()
     
@@ -56,17 +59,49 @@ async def create_status_check(input: StatusCheckCreate):
 
 @api_router.get("/status", response_model=List[StatusCheck])
 async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
     status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
     
-    # Convert ISO string timestamps back to datetime objects
     for check in status_checks:
         if isinstance(check['timestamp'], str):
             check['timestamp'] = datetime.fromisoformat(check['timestamp'])
     
     return status_checks
 
-# Include the router in the main app
+@api_router.post("/generate", response_model=GeneratePostResponse)
+async def generate_linkedin_post(request: GeneratePostRequest):
+    """
+    Generate LinkedIn post from blog URL by calling n8n webhook
+    """
+    try:
+        n8n_webhook_url = "https://n8n.srv1217218.hstgr.cloud/webhook-test/linkgen"
+        
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            response = await client.post(
+                n8n_webhook_url,
+                json={"blog_url": request.blog_url}
+            )
+            response.raise_for_status()
+            
+            data = response.json()
+            
+            post_body = data.get('post_body', '')
+            hashtags = data.get('hashtags', '')
+            full_post = data.get('full_post', f"{post_body}\n\n{hashtags}")
+            
+            return GeneratePostResponse(
+                post_body=post_body,
+                hashtags=hashtags,
+                full_post=full_post
+            )
+            
+    except httpx.TimeoutException:
+        raise HTTPException(status_code=408, detail="Request to n8n webhook timed out")
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=e.response.status_code, detail=f"n8n webhook error: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate LinkedIn post: {str(e)}")
+
+
 app.include_router(api_router)
 
 app.add_middleware(
@@ -77,7 +112,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
