@@ -1,113 +1,154 @@
 {
-  "design_system": {
-    "identity": {
-      "name": "LinkedIn Post Generator",
-      "persona": "The Digital Editor",
-      "vibe": "Editorial, Crisp, Trustworthy, Magic",
-      "theme_mode": "light-only"
+  "identity": {
+    "persona": "E1: The Anti-AI Designer",
+    "mission": "Create a LinkedIn Post Generator that feels like a magical artifact, not a form. Fusion of 'Cyberpunk' and 'Swiss Design'.",
+    "principles": [
+      "Fusion over Imitation: Mix Neon Noir with Swiss Grid.",
+      "Emotion First: The user should feel 'powerful' when generating content.",
+      "Content is King: The generated post is the hero.",
+      "Contrast: Deep blacks vs. blinding neons."
+    ]
+  },
+  "typography": {
+    "headings": {
+      "family": "Clash Display",
+      "weights": ["600", "700"],
+      "usage": "Hero titles, Section headers. Use 'tracking-tight' and 'leading-none'.",
+      "fallback": "sans-serif"
     },
-    "typography": {
-      "font_family": {
-        "heading": "Clash Display, sans-serif",
-        "body": "Satoshi, sans-serif",
-        "mono": "JetBrains Mono, monospace"
-      },
-      "usage": {
-        "h1": "text-5xl md:text-7xl font-semibold tracking-tight text-slate-900 leading-[1.1]",
-        "h2": "text-3xl md:text-4xl font-medium text-slate-800",
-        "body": "text-base md:text-lg text-slate-600 leading-relaxed",
-        "label": "text-xs font-bold uppercase tracking-widest text-slate-400",
-        "input": "text-xl md:text-2xl font-medium placeholder:text-slate-300"
-      }
+    "body": {
+      "family": "Manrope",
+      "weights": ["400", "500"],
+      "usage": "Paragraphs, Inputs, UI elements.",
+      "fallback": "sans-serif"
     },
-    "colors": {
-      "palette": {
-        "background": "#FAFAFA",
-        "surface": "#FFFFFF",
-        "surface_highlight": "#F1F5F9",
-        "text_primary": "#0F172A",
-        "text_secondary": "#475569",
-        "primary": "#4338CA",
-        "primary_hover": "#3730A3",
-        "accent": "#6366F1",
-        "border": "#E2E8F0",
-        "success": "#10B981",
-        "error": "#EF4444"
-      },
-      "gradients": {
-        "hero_glow": "radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.15) 0%, rgba(250, 250, 250, 0) 50%)",
-        "button_shine": "linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.2) 50%, transparent 75%)"
-      }
-    },
-    "layout": {
-      "container": "max-w-5xl mx-auto px-6 md:px-12",
-      "spacing": {
-        "section_gap": "py-24 md:py-32",
-        "element_gap": "gap-6 md:gap-8"
-      },
-      "grid": "grid grid-cols-1 md:grid-cols-12 gap-8"
-    },
-    "visual_enhancers": {
-      "radius": "rounded-2xl",
-      "shadows": {
-        "card": "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
-        "floating": "0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01)",
-        "glow": "0 0 20px rgba(67, 56, 202, 0.15)"
-      },
-      "borders": "border border-slate-200",
-      "glass": "bg-white/80 backdrop-blur-xl border-white/20"
-    },
-    "animation": {
-      "transition": "transition-all duration-300 ease-out",
-      "hover_lift": "hover:-translate-y-1 hover:shadow-lg",
-      "loading_shimmer": "animate-pulse bg-slate-200"
+    "code": {
+      "family": "JetBrains Mono",
+      "weights": ["400"],
+      "usage": "Hashtags, Code snippets, Technical labels.",
+      "fallback": "monospace"
     }
   },
-  "components": {
-    "InputSection": {
-      "description": "The hero interaction. Not just a box, but a statement.",
-      "style": "bg-white shadow-floating rounded-2xl p-2 flex items-center border border-slate-100 focus-within:ring-4 focus-within:ring-indigo-500/10 transition-all",
-      "elements": {
-        "input": "flex-1 border-none bg-transparent px-6 py-4 text-xl focus-visible:ring-0 placeholder:text-slate-300",
-        "button": "bg-primary text-white px-8 py-4 rounded-xl font-medium hover:bg-primary_hover transition-colors flex items-center gap-2 shadow-lg shadow-indigo-500/20"
+  "colors": {
+    "archetype": "Electric & Neon",
+    "palette": {
+      "background": {
+        "default": "#02040A",
+        "paper": "#0B0C15",
+        "subtle": "#13151F"
+      },
+      "primary": {
+        "main": "#6366F1",
+        "glow": "#818CF8",
+        "text": "#E0E7FF"
+      },
+      "accent": {
+        "cyan": "#06B6D4",
+        "pink": "#EC4899",
+        "yellow": "#FACC15"
+      },
+      "text": {
+        "primary": "#F8FAFC",
+        "secondary": "#94A3B8",
+        "muted": "#475569"
+      },
+      "border": {
+        "default": "#1E293B",
+        "active": "#334155"
       }
     },
-    "ResultCard": {
-      "description": "A clean, editable preview that mimics the LinkedIn feed but cleaner.",
-      "style": "bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm",
-      "header": "bg-slate-50 px-6 py-4 border-b border-slate-100 flex justify-between items-center",
-      "body": "p-6 min-h-[300px] font-sans text-slate-700 whitespace-pre-wrap focus:outline-none focus:bg-slate-50/50 transition-colors rounded-b-xl"
-    },
-    "LoadingState": {
-      "description": "A creative loader that builds anticipation.",
-      "type": "Progress bar with typing text",
-      "text": ["Reading blog...", "Extracting insights...", "Drafting hook...", "Polishing hashtags..."]
+    "gradients": {
+      "hero_glow": "radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.15) 0%, rgba(2, 4, 10, 0) 50%)",
+      "beam": "linear-gradient(90deg, transparent, #6366F1, transparent)"
     }
   },
-  "assets": {
-    "images": [
+  "visual_enhancers": {
+    "surfaces": [
       {
-        "category": "background_texture",
-        "url": "https://images.unsplash.com/photo-1761854149912-54ced79870ec?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHwzfHxtaW5pbWFsaXN0JTIwYWJzdHJhY3QlMjB3aGl0ZSUyMHBhcGVyJTIwdGV4dHVyZXxlbnwwfHx8fDE3NjY1MTUyNTB8MA&ixlib=rb-4.1.0&q=85",
-        "description": "Abstract white wavy shapes for subtle background depth"
+        "name": "Glassmorphism (Crystal)",
+        "usage": "Result Card, Floating Nav",
+        "classes": "bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl"
+      },
+      {
+        "name": "Tracing Beam",
+        "usage": "Input Field Container",
+        "description": "A glowing gradient line that travels around the container edge on focus."
       }
     ],
-    "icons": "Lucide React (default)"
+    "decorations": [
+      "Noise Overlay: 5% opacity grain on the background to kill digital flatness.",
+      "Glow Orbs: Blurred colored circles behind the main input area."
+    ]
+  },
+  "layout": {
+    "grid_system": "The Bento Grid (Mode A)",
+    "spacing": "Generous. Use p-8 to p-12 for containers.",
+    "structure": [
+      "Hero Section: Centered, massive typography (text-6xl+).",
+      "Input Area: The 'Altar'. Central, wide, commanding attention.",
+      "Result Area: Appears with a 'reveal' animation below the input."
+    ]
+  },
+  "components": {
+    "input_field": {
+      "style": "Minimalist but massive. No standard borders. Use a bottom border or a glowing ring.",
+      "interaction": "On focus, the glow intensifies. Placeholder text should fade out smoothly."
+    },
+    "button": {
+      "style": "Neo-Brutalist or Glowing Pill. High contrast.",
+      "hover": "Scale up slightly (1.05), increase glow opacity."
+    },
+    "result_card": {
+      "style": "Glassmorphism. Looks like a holographic projection.",
+      "features": ["Editable Text Area", "Copy Button (Icon only)", "Hashtag Chips"]
+    }
+  },
+  "motion": {
+    "library": "framer-motion",
+    "animations": [
+      {
+        "name": "fade-up",
+        "props": {
+          "initial": { "opacity": 0, "y": 20 },
+          "animate": { "opacity": 1, "y": 0 },
+          "transition": { "duration": 0.5 }
+        }
+      },
+      {
+        "name": "magic-reveal",
+        "description": "Staggered reveal of the generated post lines."
+      }
+    ]
+  },
+  "images": {
+    "backgrounds": [
+      {
+        "url": "https://images.pexels.com/photos/11167645/pexels-photo-11167645.jpeg",
+        "description": "Abstract neon technology dark background",
+        "usage": "Hero Background (Low Opacity Overlay)"
+      }
+    ],
+    "placeholders": [
+      {
+        "url": "https://images.pexels.com/photos/7967488/pexels-photo-7967488.jpeg",
+        "description": "Professional writing creative workspace",
+        "usage": "Blog Preview Placeholder"
+      }
+    ]
   },
   "instructions_to_main_agent": [
-    "CRITICAL: Enforce LIGHT MODE only. Hardcode white backgrounds and slate text. Do not use dark mode classes.",
-    "Use 'Clash Display' for the main H1 'Free LinkedIn Post Generator (AI-Powered)'.",
-    "The Input Field should be massive (text-2xl) and feel like the center of the universe.",
-    "The 'Generate' button should have a subtle 'shine' effect on hover.",
-    "The Result area must be editable (use a textarea or contentEditable div styled to look like a post).",
-    "Use the 'sonner' library for the 'Copied to clipboard' toast.",
-    "Implement the loading state with the changing text array defined in components.LoadingState.",
-    "Use the provided background image as a subtle fixed background with low opacity (opacity-40) and mix-blend-multiply."
+    "1. INSTALL DEPENDENCIES: npm install framer-motion lucide-react clsx tailwind-merge",
+    "2. SETUP FONTS: Ensure Clash Display and Manrope are loaded in index.css.",
+    "3. OVERRIDE TAILWIND: Update tailwind.config.js with the 'Electric & Neon' palette.",
+    "4. CREATE COMPONENTS: Build the 'Tracing Beam' Input and 'Glass' Result Card first.",
+    "5. IMPLEMENT LOGIC: Connect the input to the n8n webhook (mock if needed for UI dev).",
+    "6. ADD MAGIC: Use Framer Motion for the loading state (e.g., a pulsing brain or scanning effect)."
   ],
   "universal_guidelines": [
-    "Do not use generic centered layouts without tension. Use spacing to create hierarchy.",
-    "Always add hover states to interactive elements.",
-    "Use 'data-testid' for all interactive elements.",
-    "Ensure the backend webhook URL is correctly proxied via FastAPI."
+    "Do not use 'Inter' for headings.",
+    "Do not use gradients for text unless it's a very subtle shine.",
+    "Always add 'data-testid' to interactive elements.",
+    "Use 'sonner' for toast notifications.",
+    "Dark mode is the ONLY mode. Hardcode the dark colors."
   ]
 }
