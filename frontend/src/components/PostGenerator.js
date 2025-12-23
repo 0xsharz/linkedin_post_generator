@@ -193,7 +193,7 @@ const PostGenerator = () => {
                       type="url"
                       value={blogUrl}
                       onChange={(e) => setBlogUrl(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
+                      onKeyPress={(e) => e.key === 'Enter' && handleGenerate(e)}
                       onFocus={() => setIsFocused(true)}
                       onBlur={() => setIsFocused(false)}
                       placeholder="Paste your blog URL here..."
