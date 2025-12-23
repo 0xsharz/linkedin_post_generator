@@ -105,7 +105,20 @@ async def generate_linkedin_post(request: GeneratePostRequest):
             )
             response.raise_for_status()
             
-            data = response.json()
+            # Check if response has content
+            if not response.text.strip():
+                raise HTTPException(
+                    status_code=502, 
+                    detail="n8n webhook returned empty response. The workflow might not be properly configured to return data."
+                )
+            
+            try:
+                data = response.json()
+            except ValueError as e:
+                raise HTTPException(
+                    status_code=502, 
+                    detail=f"n8n webhook returned invalid JSON response: {response.text[:200]}"
+                )
             
             post_body = data.get('post_body', '')
             hashtags = data.get('hashtags', '')
