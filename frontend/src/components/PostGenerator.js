@@ -166,14 +166,14 @@ const PostGenerator = () => {
                 className="relative max-w-4xl mx-auto"
               >
                 <div 
-                  className={`relative bg-[#0B0C15] border-2 rounded-2xl transition-all duration-300 ${
+                  className={`relative bg-[#0B0C15] border-2 rounded-xl sm:rounded-2xl transition-all duration-300 ${
                     isFocused ? 'border-indigo-500 shadow-[0_0_30px_rgba(99,102,241,0.3)]' : 'border-slate-800'
                   }`}
                 >
                   {/* Tracing Beam Effect */}
                   {isFocused && (
                     <motion.div
-                      className="absolute inset-0 rounded-2xl"
+                      className="absolute inset-0 rounded-xl sm:rounded-2xl"
                       style={{
                         background: 'linear-gradient(90deg, transparent, rgba(99,102,241,0.5), transparent)',
                         backgroundSize: '200% 100%',
@@ -189,7 +189,7 @@ const PostGenerator = () => {
                     />
                   )}
                   
-                  <div className="relative flex flex-col md:flex-row items-stretch md:items-center gap-3 p-3">
+                  <div className="relative flex flex-col md:flex-row items-stretch md:items-center gap-2 sm:gap-3 p-2 sm:p-3">
                     <input
                       data-testid="blog-url-input"
                       type="url"
@@ -200,14 +200,14 @@ const PostGenerator = () => {
                       onBlur={() => setIsFocused(false)}
                       placeholder="Paste your blog URL here..."
                       disabled={isLoading}
-                      className="flex-1 bg-transparent border-none px-6 py-4 text-xl md:text-2xl text-white placeholder:text-slate-600 focus:outline-none disabled:opacity-50"
+                      className="flex-1 bg-transparent border-none px-4 py-3 sm:px-6 sm:py-4 text-lg sm:text-xl md:text-2xl text-white placeholder:text-slate-600 focus:outline-none disabled:opacity-50"
                       style={{ fontFamily: "'Manrope', sans-serif" }}
                     />
                     <button
                       data-testid="generate-button"
                       onClick={handleGenerate}
                       disabled={isLoading}
-                      className="relative px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 rounded-xl font-semibold text-white transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/50 overflow-hidden group"
+                      className="relative px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 rounded-lg sm:rounded-xl font-semibold text-white text-sm sm:text-base transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/50 overflow-hidden group"
                       style={{ fontFamily: "'Manrope', sans-serif" }}
                     >
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
@@ -218,13 +218,14 @@ const PostGenerator = () => {
                               animate={{ rotate: 360 }}
                               transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                             >
-                              <Sparkles className="w-5 h-5" />
+                              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
                             </motion.div>
-                            <span className="hidden md:inline">{loadingTexts[loadingTextIndex]}</span>
+                            <span className="hidden sm:inline">{loadingTexts[loadingTextIndex]}</span>
+                            <span className="sm:hidden">Processing...</span>
                           </>
                         ) : (
                           <>
-                            <Sparkles className="w-5 h-5" />
+                            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
                             <span>Generate</span>
                           </>
                         )}
@@ -238,7 +239,7 @@ const PostGenerator = () => {
                   <motion.div
                     initial={{ opacity: 0, scaleX: 0 }}
                     animate={{ opacity: 1, scaleX: 1 }}
-                    className="mt-4 h-1 bg-gradient-to-r from-indigo-500 via-cyan-500 to-pink-500 rounded-full origin-left"
+                    className="mt-3 sm:mt-4 h-1 bg-gradient-to-r from-indigo-500 via-cyan-500 to-pink-500 rounded-full origin-left"
                   />
                 )}
               </motion.div>
