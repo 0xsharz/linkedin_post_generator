@@ -112,7 +112,7 @@ const PostGenerator = () => {
       {/* Noise Overlay */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=')] opacity-30 pointer-events-none"></div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-12 py-16 md:py-24">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 md:px-12 py-12 sm:py-16 md:py-24">
         <AnimatePresence mode="wait">
           {!generatedPost ? (
             <motion.div
@@ -121,25 +121,25 @@ const PostGenerator = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -40 }}
               transition={{ duration: 0.5 }}
-              className="space-y-12"
+              className="space-y-8 sm:space-y-12"
             >
               {/* Header */}
-              <div className="text-center space-y-8">
+              <div className="text-center space-y-4 sm:space-y-8">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.1 }}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/10 border border-indigo-500/30 rounded-full backdrop-blur-sm"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-indigo-500/10 border border-indigo-500/30 rounded-full backdrop-blur-sm"
                 >
-                  <Zap className="w-4 h-4 text-indigo-400" fill="currentColor" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-indigo-300">AI-Powered</span>
+                  <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-indigo-400" fill="currentColor" />
+                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-indigo-300">AI-Powered</span>
                 </motion.div>
                 
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-none"
+                  className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tight leading-none px-2"
                   style={{ fontFamily: "'Clash Display', sans-serif" }}
                 >
                   <span className="text-white">Free LinkedIn Post</span>
@@ -151,7 +151,7 @@ const PostGenerator = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto"
+                  className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-400 max-w-2xl mx-auto px-4"
                   style={{ fontFamily: "'Manrope', sans-serif" }}
                 >
                   Transform any blog URL into a professional LinkedIn post in seconds.
