@@ -1,52 +1,52 @@
 {
   "summary": {
     "total_tests": 7,
-    "passed_tests": 4,
-    "success_rate": "57.1%",
-    "timestamp": "2025-12-23T18:32:23.552047"
+    "passed_tests": 5,
+    "success_rate": "71.4%",
+    "timestamp": "2025-12-23T18:36:57.782065"
   },
   "test_results": [
     {
       "test": "API Root",
       "status": "PASS",
       "details": "Status: 200, Response: {\n  \"message\": \"LinkedIn Post Generator API\"\n}...",
-      "timestamp": "2025-12-23T18:32:21.449510"
+      "timestamp": "2025-12-23T18:36:56.673430"
     },
     {
       "test": "Get Status Checks",
       "status": "PASS",
-      "details": "Status: 200, Response: []...",
-      "timestamp": "2025-12-23T18:32:21.495425"
+      "details": "Status: 200, Response: [\n  {\n    \"id\": \"39b24438-539a-4a5b-93a5-717f380f1532\",\n    \"client_name\": \"test_client_183221\",\n    \"timestamp\": \"2025-12-23T18:32:21.531701Z\"\n  }\n]...",
+      "timestamp": "2025-12-23T18:36:56.728741"
     },
     {
       "test": "Create Status Check",
       "status": "PASS",
-      "details": "Status: 200, Response: {\n  \"id\": \"39b24438-539a-4a5b-93a5-717f380f1532\",\n  \"client_name\": \"test_client_183221\",\n  \"timestamp\": \"2025-12-23T18:32:21.531701Z\"\n}...",
-      "timestamp": "2025-12-23T18:32:21.553026"
+      "details": "Status: 200, Response: {\n  \"id\": \"8abba8c1-a210-4412-80bd-f411dd96332f\",\n  \"client_name\": \"test_client_183656\",\n  \"timestamp\": \"2025-12-23T18:36:56.766360Z\"\n}...",
+      "timestamp": "2025-12-23T18:36:56.772622"
     },
     {
       "test": "CORS Configuration",
       "status": "FAIL",
       "details": "CORS Headers: {'Access-Control-Allow-Origin': None, 'Access-Control-Allow-Methods': None, 'Access-Control-Allow-Headers': None}",
-      "timestamp": "2025-12-23T18:32:21.595795"
+      "timestamp": "2025-12-23T18:36:56.811667"
     },
     {
       "test": "Generate Post - Missing URL",
       "status": "PASS",
       "details": "Status: 422, Response: {\n  \"detail\": [\n    {\n      \"type\": \"missing\",\n      \"loc\": [\n        \"body\",\n        \"blog_url\"\n      ],\n      \"msg\": \"Field required\",\n      \"input\": {},\n      \"url\": \"https://errors.pydantic.dev/2....",
-      "timestamp": "2025-12-23T18:32:21.641325"
+      "timestamp": "2025-12-23T18:36:56.889654"
     },
     {
       "test": "Generate Post - Invalid URL",
-      "status": "FAIL",
-      "details": "Expected 422, got 520. Error: {'detail': 'Failed to generate LinkedIn post: Expecting value: line 1 column 1 (char 0)'}",
-      "timestamp": "2025-12-23T18:32:22.681603"
+      "status": "PASS",
+      "details": "Status: 422, Response: {\n  \"detail\": [\n    {\n      \"type\": \"value_error\",\n      \"loc\": [\n        \"body\",\n        \"blog_url\"\n      ],\n      \"msg\": \"Value error, Invalid URL format. Please provide a valid blog URL starting wi...",
+      "timestamp": "2025-12-23T18:36:56.928766"
     },
     {
       "test": "Generate Post - Real Webhook",
       "status": "FAIL",
-      "details": "Expected 200, got 404. Error: {'detail': \"n8n webhook error: Client error '404 Not Found' for url 'https://n8n.srv1217218.hstgr.cloud/webhook-test/linkgen'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
-      "timestamp": "2025-12-23T18:32:23.551124"
+      "details": "Expected 200, got 521. Error: {'detail': 'n8n webhook is not available. Please ensure the webhook is activated in n8n workflow (not in test mode).'}",
+      "timestamp": "2025-12-23T18:36:57.781176"
     }
   ]
 }
