@@ -38,7 +38,7 @@ const PostGenerator = () => {
     }
 
     if (!validateUrl(blogUrl)) {
-      toast.error('Please enter a valid URL');
+      toast.error('Please enter a valid URL starting with http:// or https://');
       return;
     }
 
@@ -59,9 +59,25 @@ const PostGenerator = () => {
       toast.success('LinkedIn post generated successfully!');
     } catch (error) {
       console.error('Generation error:', error);
-      toast.error(
-        error.response?.data?.detail || 'Failed to generate post. Please try again.'
-      );
+      
+      let errorMessage = 'Failed to generate post. Please try again.';
+      
+      if (error.response?.status === 422) {
+        const validationError = error.response?.data?.detail?.[0]?.msg || error.response?.data?.detail;
+        errorMessage = validationError || 'Invalid blog URL format. Please check and try again.';
+      } else if (error.response?.status === 502) {
+        errorMessage = error.response?.data?.detail || 'The n8n webhook service is not available. Please activate the webhook in n8n.';
+      } else if (error.response?.status === 408) {
+        errorMessage = 'Request timed out. The blog might be too large. Please try a different URL.';
+      } else if (error.response?.status === 503) {
+        errorMessage = 'Unable to connect to the service. Please check your connection and try again.';
+      } else if (error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      } else if (error.message === 'Network Error') {
+        errorMessage = 'Network error. Please check your internet connection.';
+      }
+      
+      toast.error(errorMessage, { duration: 5000 });
     } finally {
       clearInterval(textInterval);
       setIsLoading(false);
