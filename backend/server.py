@@ -105,19 +105,24 @@ async def generate_linkedin_post(request: GeneratePostRequest):
             )
             response.raise_for_status()
             
+            # Log the response for debugging
+            logger.info(f"n8n webhook response status: {response.status_code}")
+            logger.info(f"n8n webhook response body: {response.text[:500]}")
+            
             # Check if response has content
-            if not response.text.strip():
+            if not response.text or not response.text.strip():
                 raise HTTPException(
                     status_code=502, 
-                    detail="n8n webhook returned empty response. The workflow might not be properly configured to return data."
+                    detail="n8n webhook returned empty response. Please configure your n8n workflow to return JSON data with fields: post_body, hashtags, full_post"
                 )
             
             try:
                 data = response.json()
             except ValueError as e:
+                logger.error(f"Failed to parse n8n response as JSON: {response.text[:200]}")
                 raise HTTPException(
                     status_code=502, 
-                    detail=f"n8n webhook returned invalid JSON response: {response.text[:200]}"
+                    detail=f"n8n webhook returned invalid JSON. Response: {response.text[:100]}"
                 )
             
             # Handle if n8n returns a list (take first item) or dict
@@ -127,16 +132,32 @@ async def generate_linkedin_post(request: GeneratePostRequest):
                         status_code=502, 
                         detail="n8n webhook returned an empty list"
                     )
+                logger.info(f"n8n returned a list with {len(data)} items, using first item")
                 data = data[0]
             
             # Extract fields from the response
-            post_body = data.get('post_body', data.get('body', ''))
+            post_body = data.get('post_body', data.get('body', data.get('text', '')))
             hashtags = data.get('hashtags', data.get('tags', ''))
-            full_post = data.get('full_post', '')
+            full_post = data.get('full_post', data.get('content', ''))
             
             # If full_post is empty, combine post_body and hashtags
             if not full_post and (post_body or hashtags):
                 full_post = f"{post_body}\n\n{hashtags}" if hashtags else post_body
+            
+            # If still empty, check if data has any string values
+            if not full_post and not post_body:
+                # Try to extract any text content from the response
+                for key, value in data.items():
+                    if isinstance(value, str) and len(value) > 10:
+                        full_post = value
+                        post_body = value
+                        break
+            
+            if not full_post:
+                raise HTTPException(
+                    status_code=502,
+                    detail=f"n8n webhook returned data but no recognizable content. Received fields: {list(data.keys())}"
+                )
             
             return GeneratePostResponse(
                 post_body=post_body,
