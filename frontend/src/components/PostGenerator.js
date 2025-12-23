@@ -67,7 +67,7 @@ const PostGenerator = () => {
         const validationError = error.response?.data?.detail?.[0]?.msg || error.response?.data?.detail;
         errorMessage = validationError || 'Invalid blog URL format. Please check and try again.';
       } else if (error.response?.status === 502) {
-        errorMessage = error.response?.data?.detail || 'The n8n webhook service is not available. Please activate the webhook in n8n.';
+        errorMessage = error.response?.data?.detail || 'Service configuration issue. Please contact support.';
       } else if (error.response?.status === 408) {
         errorMessage = 'Request timed out. The blog might be too large. Please try a different URL.';
       } else if (error.response?.status === 503) {
