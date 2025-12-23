@@ -36,6 +36,27 @@ class StatusCheckCreate(BaseModel):
 
 class GeneratePostRequest(BaseModel):
     blog_url: str
+    
+    @field_validator('blog_url')
+    @classmethod
+    def validate_url(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError('Blog URL is required')
+        
+        v = v.strip()
+        
+        url_pattern = re.compile(
+            r'^https?://'
+            r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?|'
+            r'localhost|'
+            r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
+            r'(?::\d+)?'
+            r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+        
+        if not url_pattern.match(v):
+            raise ValueError('Invalid URL format. Please provide a valid blog URL starting with http:// or https://')
+        
+        return v
 
 class GeneratePostResponse(BaseModel):
     post_body: str
