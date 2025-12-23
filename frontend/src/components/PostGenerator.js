@@ -53,6 +53,8 @@ const PostGenerator = () => {
     try {
       const response = await axios.post(`${BACKEND_URL}/api/generate`, {
         blog_url: blogUrl
+      }, {
+        timeout: 180000 // 3 minutes timeout to match backend
       });
 
       setGeneratedPost(response.data);
