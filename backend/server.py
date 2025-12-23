@@ -135,18 +135,31 @@ async def generate_linkedin_post(request: GeneratePostRequest):
                 logger.info(f"n8n returned a list with {len(data)} items, using first item")
                 data = data[0]
             
+            # Extract the output field (n8n format)
+            output_text = data.get('output', '')
+            
             # Extract fields from the response
             post_body = data.get('post_body', data.get('body', data.get('text', '')))
             hashtags = data.get('hashtags', data.get('tags', ''))
             full_post = data.get('full_post', data.get('content', ''))
             
+            # If we have output field (n8n format), use it
+            if output_text:
+                full_post = output_text
+                # Try to extract hashtags from the output (lines starting with #)
+                lines = output_text.split('\n')
+                hashtag_lines = [line.strip() for line in lines if line.strip().startswith('#')]
+                if hashtag_lines:
+                    hashtags = ' '.join(hashtag_lines)
+                    # Post body is everything except hashtag lines
+                    post_body = '\n'.join([line for line in lines if not line.strip().startswith('#')]).strip()
+                else:
+                    post_body = output_text
             # If full_post is empty, combine post_body and hashtags
-            if not full_post and (post_body or hashtags):
+            elif post_body or hashtags:
                 full_post = f"{post_body}\n\n{hashtags}" if hashtags else post_body
-            
             # If still empty, check if data has any string values
-            if not full_post and not post_body:
-                # Try to extract any text content from the response
+            else:
                 for key, value in data.items():
                     if isinstance(value, str) and len(value) > 10:
                         full_post = value
