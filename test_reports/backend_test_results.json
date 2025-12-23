@@ -1,0 +1,52 @@
+{
+  "summary": {
+    "total_tests": 7,
+    "passed_tests": 4,
+    "success_rate": "57.1%",
+    "timestamp": "2025-12-23T18:32:23.552047"
+  },
+  "test_results": [
+    {
+      "test": "API Root",
+      "status": "PASS",
+      "details": "Status: 200, Response: {\n  \"message\": \"LinkedIn Post Generator API\"\n}...",
+      "timestamp": "2025-12-23T18:32:21.449510"
+    },
+    {
+      "test": "Get Status Checks",
+      "status": "PASS",
+      "details": "Status: 200, Response: []...",
+      "timestamp": "2025-12-23T18:32:21.495425"
+    },
+    {
+      "test": "Create Status Check",
+      "status": "PASS",
+      "details": "Status: 200, Response: {\n  \"id\": \"39b24438-539a-4a5b-93a5-717f380f1532\",\n  \"client_name\": \"test_client_183221\",\n  \"timestamp\": \"2025-12-23T18:32:21.531701Z\"\n}...",
+      "timestamp": "2025-12-23T18:32:21.553026"
+    },
+    {
+      "test": "CORS Configuration",
+      "status": "FAIL",
+      "details": "CORS Headers: {'Access-Control-Allow-Origin': None, 'Access-Control-Allow-Methods': None, 'Access-Control-Allow-Headers': None}",
+      "timestamp": "2025-12-23T18:32:21.595795"
+    },
+    {
+      "test": "Generate Post - Missing URL",
+      "status": "PASS",
+      "details": "Status: 422, Response: {\n  \"detail\": [\n    {\n      \"type\": \"missing\",\n      \"loc\": [\n        \"body\",\n        \"blog_url\"\n      ],\n      \"msg\": \"Field required\",\n      \"input\": {},\n      \"url\": \"https://errors.pydantic.dev/2....",
+      "timestamp": "2025-12-23T18:32:21.641325"
+    },
+    {
+      "test": "Generate Post - Invalid URL",
+      "status": "FAIL",
+      "details": "Expected 422, got 520. Error: {'detail': 'Failed to generate LinkedIn post: Expecting value: line 1 column 1 (char 0)'}",
+      "timestamp": "2025-12-23T18:32:22.681603"
+    },
+    {
+      "test": "Generate Post - Real Webhook",
+      "status": "FAIL",
+      "details": "Expected 200, got 404. Error: {'detail': \"n8n webhook error: Client error '404 Not Found' for url 'https://n8n.srv1217218.hstgr.cloud/webhook-test/linkgen'\\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\"}",
+      "timestamp": "2025-12-23T18:32:23.551124"
+    }
+  ]
+}
