@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Copy, RefreshCw, Zap } from 'lucide-react';
+import { Sparkles, Copy, RefreshCw, Zap, Edit3 } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
