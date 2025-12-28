@@ -92,7 +92,23 @@ const PostGenerator = () => {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(editedPost);
+      // Copy the rendered text content, not the markdown
+      const tempDiv = document.createElement('div');
+      const parser = new DOMParser();
+      
+      // Convert markdown to plain text by removing markdown syntax
+      let textToCopy = editedPost
+        .replace(/\*\*(.+?)\*\*/g, '$1') // Remove bold
+        .replace(/\*(.+?)\*/g, '$1') // Remove italic
+        .replace(/`(.+?)`/g, '$1') // Remove inline code
+        .replace(/\[(.+?)\]\(.+?\)/g, '$1') // Remove links but keep text
+        .replace(/^#+\s+/gm, '') // Remove headers
+        .replace(/^\s*[-*+]\s+/gm, '') // Remove list markers
+        .replace(/^\s*\d+\.\s+/gm, '') // Remove numbered list markers
+        .replace(/^>\s+/gm, '') // Remove blockquote markers
+        .replace(/\n{3,}/g, '\n\n'); // Normalize multiple newlines
+      
+      await navigator.clipboard.writeText(textToCopy);
       toast.success('Copied to clipboard!');
     } catch (error) {
       toast.error('Failed to copy to clipboard');
