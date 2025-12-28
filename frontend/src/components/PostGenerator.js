@@ -291,137 +291,35 @@ const PostGenerator = () => {
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
                     <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                      {isEditMode ? 'Editing' : 'Preview'}
+                      LinkedIn Ready
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setIsEditMode(!isEditMode)}
-                      className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-md sm:rounded-lg bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 font-medium text-xs sm:text-sm shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
-                    >
-                      <Edit3 className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span>{isEditMode ? 'Preview' : 'Edit'}</span>
-                    </button>
-                    <button
-                      data-testid="copy-button"
-                      onClick={handleCopyForLinkedIn}
-                      className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-md sm:rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-medium text-xs sm:text-sm shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
-                      title="Copy plain text for LinkedIn. You'll need to format and add images manually."
-                    >
-                      <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span>Copy for LinkedIn</span>
-                    </button>
-                  </div>
+                  <button
+                    data-testid="copy-button"
+                    onClick={handleCopyForLinkedIn}
+                    className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-md sm:rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-medium text-xs sm:text-sm shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+                  >
+                    <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span>Copy for LinkedIn</span>
+                  </button>
                 </div>
                 
                 {/* LinkedIn Instructions */}
-                {!isEditMode && (
-                  <div className="px-4 py-3 sm:px-6 sm:py-4 bg-indigo-500/5 border-t border-white/10 text-xs sm:text-sm text-slate-400">
-                    <p className="font-semibold text-slate-300 mb-1">📋 How to post on LinkedIn:</p>
-                    <ol className="list-decimal list-inside space-y-1 ml-2">
-                      <li>Click "Copy for LinkedIn" button above</li>
-                      <li>Paste into LinkedIn post editor</li>
-                      <li>Use LinkedIn's formatting buttons to add <strong>bold</strong> and <em>italic</em></li>
-                      <li>Click LinkedIn's "Add media" button to upload images</li>
-                      <li>Add emojis using your keyboard emoji picker</li>
-                    </ol>
-                  </div>
-                )}
+                <div className="px-4 py-3 sm:px-6 bg-blue-500/5 border-b border-white/10 text-xs text-slate-400">
+                  <p className="flex items-center gap-2">
+                    <span className="text-blue-400">💡</span>
+                    <span>Click "Copy for LinkedIn" → Paste directly into LinkedIn (Unicode formatted, no manual editing needed)</span>
+                  </p>
+                </div>
                 
-                {isEditMode ? (
-                  <textarea
-                    data-testid="generated-post-textarea"
-                    value={editedPost}
-                    onChange={(e) => setEditedPost(e.target.value)}
-                    rows={15}
-                    className="w-full p-4 sm:p-6 bg-transparent text-slate-200 whitespace-pre-wrap focus:outline-none focus:bg-white/5 transition-colors resize-none border-none text-sm sm:text-base"
-                    style={{ fontFamily: "'Manrope', sans-serif", lineHeight: '1.7' }}
-                  />
-                ) : (
-                  <div 
-                    data-testid="generated-post-preview"
-                    className="w-full p-4 sm:p-6 bg-transparent text-slate-200 markdown-preview"
-                    style={{ fontFamily: "'Manrope', sans-serif" }}
-                  >
-                    {editedPost ? (
-                      <div className="prose prose-invert prose-sm sm:prose-base max-w-none">
-                        <ReactMarkdown
-                          remarkPlugins={[remarkGfm]}
-                          components={{
-                            img: ({node, ...props}) => (
-                              <img 
-                                {...props} 
-                                className="rounded-lg shadow-lg max-w-full h-auto my-4"
-                                loading="lazy"
-                                alt={props.alt || 'LinkedIn post image'}
-                              />
-                            ),
-                            a: ({node, ...props}) => {
-                              // Check if the link is an image URL
-                              const url = props.href || '';
-                              
-                              // Check for file extension
-                              const hasImageExtension = /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(url);
-                              
-                              // Check for image CDN patterns
-                              const isImageCDN = /media\.linkedin\.com\/dms\/image/i.test(url) ||
-                                                /cloudinary\.com\/.*\/image/i.test(url) ||
-                                                /imgur\.com/i.test(url) ||
-                                                /googleusercontent\.com/i.test(url) ||
-                                                /githubusercontent\.com/i.test(url) ||
-                                                /unsplash\.com/i.test(url) ||
-                                                /pexels\.com/i.test(url);
-                              
-                              // Check for image keywords in path
-                              const hasImageKeyword = /\/image|\/img|\/photo|\/picture|\/screenshot|article-inline_image/i.test(url);
-                              
-                              const isImage = hasImageExtension || isImageCDN || hasImageKeyword;
-                              
-                              if (isImage) {
-                                return (
-                                  <img 
-                                    src={url}
-                                    className="rounded-lg shadow-lg max-w-full h-auto my-4 block"
-                                    loading="lazy"
-                                    alt={props.children?.[0] || 'Image'}
-                                    onError={(e) => {
-                                      console.error('Image failed to load:', url);
-                                      e.target.style.display = 'none';
-                                    }}
-                                  />
-                                );
-                              }
-                              return (
-                                <a 
-                                  {...props} 
-                                  className="text-cyan-400 hover:text-cyan-300 underline transition-colors break-words"
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                />
-                              );
-                            },
-                            strong: ({node, ...props}) => (
-                              <strong {...props} className="text-white font-semibold" />
-                            ),
-                            em: ({node, ...props}) => (
-                              <em {...props} className="text-slate-300 italic" />
-                            ),
-                            code: ({node, inline, ...props}) => 
-                              inline ? (
-                                <code {...props} className="bg-slate-800/80 text-cyan-400 px-1.5 py-0.5 rounded text-sm font-mono" style={{ display: 'inline' }} />
-                              ) : (
-                                <code {...props} className="block bg-slate-800 text-cyan-400 p-4 rounded-lg overflow-x-auto text-sm font-mono" />
-                              ),
-                          }}
-                        >
-                          {editedPost}
-                        </ReactMarkdown>
-                      </div>
-                    ) : (
-                      <p className="text-slate-400">No content to display</p>
-                    )}
-                  </div>
-                )}
+                <div 
+                  data-testid="generated-post-preview"
+                  className="w-full p-4 sm:p-6 bg-transparent text-slate-200"
+                >
+                  <pre className="whitespace-pre-wrap font-sans text-sm sm:text-base leading-relaxed" style={{ fontFamily: "'Manrope', sans-serif" }}>
+                    {editedPost}
+                  </pre>
+                </div>
               </motion.div>
             </motion.div>
           )}
