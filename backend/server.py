@@ -96,7 +96,7 @@ async def generate_linkedin_post(request: GeneratePostRequest):
     n8n webhook URL is kept server-side for security
     """
     try:
-        n8n_webhook_url = "https://n8n.srv1217218.hstgr.cloud/webhook/linkgen"
+        n8n_webhook_url = "https://n8n.xshz.me/webhook/linkgen"
         
         # Increased timeout to 180 seconds (3 minutes) for long-running n8n workflows
         async with httpx.AsyncClient(timeout=180.0) as client:
