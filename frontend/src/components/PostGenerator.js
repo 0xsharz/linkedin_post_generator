@@ -396,8 +396,13 @@ const PostGenerator = () => {
                           );
                         },
                         p: ({node, children, ...props}) => {
-                          // Make first paragraph (title) bold
-                          const isFirstParagraph = node?.position?.start?.line === 1;
+                          // Check if this is the first paragraph (title)
+                          const text = typeof children === 'string' ? children : 
+                                      (Array.isArray(children) && children[0] && typeof children[0] === 'string') ? children[0] : '';
+                          const lines = editedPost.split('\n');
+                          const firstNonEmptyLine = lines.find(line => line.trim().length > 0);
+                          const isFirstParagraph = firstNonEmptyLine && text.includes(firstNonEmptyLine.substring(0, 50));
+                          
                           if (isFirstParagraph) {
                             return <p {...props} className="mb-4 leading-relaxed font-bold text-white text-xl sm:text-2xl">{children}</p>;
                           }
