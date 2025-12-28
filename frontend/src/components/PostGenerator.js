@@ -371,6 +371,20 @@ const PostGenerator = () => {
                   </div>
                 </div>
                 
+                {/* LinkedIn Instructions */}
+                {!isEditMode && (
+                  <div className="px-4 py-3 sm:px-6 sm:py-4 bg-indigo-500/5 border-t border-white/10 text-xs sm:text-sm text-slate-400">
+                    <p className="font-semibold text-slate-300 mb-1">📋 How to post on LinkedIn:</p>
+                    <ol className="list-decimal list-inside space-y-1 ml-2">
+                      <li>Click "Copy for LinkedIn" button above</li>
+                      <li>Paste into LinkedIn post editor</li>
+                      <li>Use LinkedIn's formatting buttons to add <strong>bold</strong> and <em>italic</em></li>
+                      <li>Click LinkedIn's "Add media" button to upload images</li>
+                      <li>Add emojis using your keyboard emoji picker</li>
+                    </ol>
+                  </div>
+                )}
+                
                 {isEditMode ? (
                   <textarea
                     data-testid="generated-post-textarea"
