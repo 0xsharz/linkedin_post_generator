@@ -366,80 +366,60 @@ const PostGenerator = () => {
                 ) : (
                   <div 
                     data-testid="generated-post-preview"
-                    className="w-full p-4 sm:p-6 bg-transparent text-slate-200 prose prose-invert prose-sm sm:prose-base max-w-none overflow-auto markdown-preview"
+                    className="w-full p-4 sm:p-6 bg-transparent text-slate-200 markdown-preview"
                     style={{ fontFamily: "'Manrope', sans-serif" }}
                   >
                     {editedPost ? (
-                      <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
-                        components={{
-                          img: ({node, ...props}) => (
-                            <img 
-                              {...props} 
-                              className="rounded-lg shadow-lg max-w-full h-auto my-4"
-                              loading="lazy"
-                              alt={props.alt || 'LinkedIn post image'}
-                            />
-                          ),
-                          a: ({node, ...props}) => {
-                            // Check if the link is an image URL
-                            const isImage = props.href && /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(props.href);
-                            if (isImage) {
+                      <div className="prose prose-invert prose-sm sm:prose-base max-w-none">
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            img: ({node, ...props}) => (
+                              <img 
+                                {...props} 
+                                className="rounded-lg shadow-lg max-w-full h-auto my-4"
+                                loading="lazy"
+                                alt={props.alt || 'LinkedIn post image'}
+                              />
+                            ),
+                            a: ({node, ...props}) => {
+                              const isImage = props.href && /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(props.href);
+                              if (isImage) {
+                                return (
+                                  <img 
+                                    src={props.href}
+                                    className="rounded-lg shadow-lg max-w-full h-auto my-4 block"
+                                    loading="lazy"
+                                    alt={props.children?.[0] || 'Image'}
+                                  />
+                                );
+                              }
                               return (
-                                <img 
-                                  src={props.href}
-                                  className="rounded-lg shadow-lg max-w-full h-auto my-4 block"
-                                  loading="lazy"
-                                  alt={props.children?.[0] || 'Image'}
+                                <a 
+                                  {...props} 
+                                  className="text-cyan-400 hover:text-cyan-300 underline transition-colors break-words"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                 />
                               );
-                            }
-                            return (
-                              <a 
-                                {...props} 
-                                className="text-cyan-400 hover:text-cyan-300 underline transition-colors break-words"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              />
-                            );
-                          },
-                          p: ({node, children, ...props}) => {
-                            return <p {...props} className="mb-4 leading-relaxed" />;
-                          },
-                          strong: ({node, ...props}) => (
-                            <strong {...props} className="text-white font-semibold" />
-                          ),
-                          em: ({node, ...props}) => (
-                            <em {...props} className="text-slate-300 italic" />
-                          ),
-                          ul: ({node, ...props}) => (
-                            <ul {...props} className="list-disc list-inside mb-4 space-y-2" />
-                          ),
-                          ol: ({node, ...props}) => (
-                            <ol {...props} className="list-decimal list-inside mb-4 space-y-2" />
-                          ),
-                          h1: ({node, ...props}) => (
-                            <h1 {...props} className="text-2xl sm:text-3xl font-bold mb-4 text-white" />
-                          ),
-                          h2: ({node, ...props}) => (
-                            <h2 {...props} className="text-xl sm:text-2xl font-bold mb-3 text-white" />
-                          ),
-                          h3: ({node, ...props}) => (
-                            <h3 {...props} className="text-lg sm:text-xl font-bold mb-2 text-white" />
-                          ),
-                          code: ({node, inline, ...props}) => 
-                            inline ? (
-                              <code {...props} className="bg-slate-800/80 text-cyan-400 px-1.5 py-0.5 rounded text-sm font-mono inline-block whitespace-nowrap" style={{ display: 'inline' }} />
-                            ) : (
-                              <code {...props} className="block bg-slate-800 text-cyan-400 p-4 rounded-lg overflow-x-auto text-sm font-mono" />
+                            },
+                            strong: ({node, ...props}) => (
+                              <strong {...props} className="text-white font-semibold" />
                             ),
-                          blockquote: ({node, ...props}) => (
-                            <blockquote {...props} className="border-l-4 border-indigo-500 pl-4 italic text-slate-300 my-4" />
-                          ),
-                        }}
-                      >
-                        {preprocessContent(editedPost)}
-                      </ReactMarkdown>
+                            em: ({node, ...props}) => (
+                              <em {...props} className="text-slate-300 italic" />
+                            ),
+                            code: ({node, inline, ...props}) => 
+                              inline ? (
+                                <code {...props} className="bg-slate-800/80 text-cyan-400 px-1.5 py-0.5 rounded text-sm font-mono" style={{ display: 'inline' }} />
+                              ) : (
+                                <code {...props} className="block bg-slate-800 text-cyan-400 p-4 rounded-lg overflow-x-auto text-sm font-mono" />
+                              ),
+                          }}
+                        >
+                          {preprocessContent(editedPost)}
+                        </ReactMarkdown>
+                      </div>
                     ) : (
                       <p className="text-slate-400">No content to display</p>
                     )}
