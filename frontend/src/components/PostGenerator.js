@@ -147,7 +147,6 @@ const PostGenerator = () => {
     setBlogUrl('');
     setGeneratedPost(null);
     setEditedPost('');
-    setIsEditMode(false);
   };
 
   return (
