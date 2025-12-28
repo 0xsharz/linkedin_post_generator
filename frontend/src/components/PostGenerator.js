@@ -361,11 +361,12 @@ const PostGenerator = () => {
                     </button>
                     <button
                       data-testid="copy-button"
-                      onClick={handleCopy}
+                      onClick={handleCopyForLinkedIn}
                       className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-md sm:rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-medium text-xs sm:text-sm shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+                      title="Copy plain text for LinkedIn. You'll need to format and add images manually."
                     >
                       <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span>Copy</span>
+                      <span>Copy for LinkedIn</span>
                     </button>
                   </div>
                 </div>
