@@ -400,14 +400,37 @@ const PostGenerator = () => {
                               />
                             ),
                             a: ({node, ...props}) => {
-                              const isImage = props.href && /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(props.href);
+                              // Check if the link is an image URL
+                              const url = props.href || '';
+                              
+                              // Check for file extension
+                              const hasImageExtension = /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(url);
+                              
+                              // Check for image CDN patterns
+                              const isImageCDN = /media\.linkedin\.com\/dms\/image/i.test(url) ||
+                                                /cloudinary\.com\/.*\/image/i.test(url) ||
+                                                /imgur\.com/i.test(url) ||
+                                                /googleusercontent\.com/i.test(url) ||
+                                                /githubusercontent\.com/i.test(url) ||
+                                                /unsplash\.com/i.test(url) ||
+                                                /pexels\.com/i.test(url);
+                              
+                              // Check for image keywords in path
+                              const hasImageKeyword = /\/image|\/img|\/photo|\/picture|\/screenshot|article-inline_image/i.test(url);
+                              
+                              const isImage = hasImageExtension || isImageCDN || hasImageKeyword;
+                              
                               if (isImage) {
                                 return (
                                   <img 
-                                    src={props.href}
+                                    src={url}
                                     className="rounded-lg shadow-lg max-w-full h-auto my-4 block"
                                     loading="lazy"
                                     alt={props.children?.[0] || 'Image'}
+                                    onError={(e) => {
+                                      console.error('Image failed to load:', url);
+                                      e.target.style.display = 'none';
+                                    }}
                                   />
                                 );
                               }
