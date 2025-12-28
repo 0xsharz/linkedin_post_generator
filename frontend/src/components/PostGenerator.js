@@ -389,9 +389,9 @@ const PostGenerator = () => {
                         ),
                         code: ({node, inline, ...props}) => 
                           inline ? (
-                            <code {...props} className="bg-slate-800 text-cyan-400 px-1.5 py-0.5 rounded text-sm" />
+                            <code {...props} className="bg-slate-800/80 text-cyan-400 px-1.5 py-0.5 rounded text-sm font-mono inline-block whitespace-nowrap" style={{ display: 'inline' }} />
                           ) : (
-                            <code {...props} className="block bg-slate-800 text-cyan-400 p-4 rounded-lg overflow-x-auto text-sm" />
+                            <code {...props} className="block bg-slate-800 text-cyan-400 p-4 rounded-lg overflow-x-auto text-sm font-mono" />
                           ),
                         blockquote: ({node, ...props}) => (
                           <blockquote {...props} className="border-l-4 border-indigo-500 pl-4 italic text-slate-300 my-4" />
