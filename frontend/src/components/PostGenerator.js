@@ -355,17 +355,36 @@ const PostGenerator = () => {
                             alt={props.alt || 'LinkedIn post image'}
                           />
                         ),
-                        a: ({node, ...props}) => (
-                          <a 
-                            {...props} 
-                            className="text-cyan-400 hover:text-cyan-300 underline transition-colors"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          />
-                        ),
-                        p: ({node, ...props}) => (
-                          <p {...props} className="mb-4 leading-relaxed" />
-                        ),
+                        a: ({node, ...props}) => {
+                          // Check if the link is an image URL
+                          const isImage = props.href && /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(props.href);
+                          if (isImage) {
+                            return (
+                              <img 
+                                src={props.href}
+                                className="rounded-lg shadow-lg max-w-full h-auto my-4 block"
+                                loading="lazy"
+                                alt={props.children?.[0] || 'Image'}
+                              />
+                            );
+                          }
+                          return (
+                            <a 
+                              {...props} 
+                              className="text-cyan-400 hover:text-cyan-300 underline transition-colors break-words"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            />
+                          );
+                        },
+                        p: ({node, children, ...props}) => {
+                          // Make first paragraph (title) bold
+                          const isFirstParagraph = node?.position?.start?.line === 1;
+                          if (isFirstParagraph) {
+                            return <p {...props} className="mb-4 leading-relaxed font-bold text-white text-xl sm:text-2xl">{children}</p>;
+                          }
+                          return <p {...props} className="mb-4 leading-relaxed" />;
+                        },
                         strong: ({node, ...props}) => (
                           <strong {...props} className="text-white font-semibold" />
                         ),
