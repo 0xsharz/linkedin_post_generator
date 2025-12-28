@@ -290,25 +290,102 @@ const PostGenerator = () => {
                 <div className="bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 px-4 py-3 sm:px-6 sm:py-4 border-b border-white/10 flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Editable</span>
+                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                      {isEditMode ? 'Editing' : 'Preview'}
+                    </span>
                   </div>
-                  <button
-                    data-testid="copy-button"
-                    onClick={handleCopy}
-                    className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-md sm:rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-medium text-xs sm:text-sm shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
-                  >
-                    <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span>Copy</span>
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setIsEditMode(!isEditMode)}
+                      className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-md sm:rounded-lg bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 font-medium text-xs sm:text-sm shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+                    >
+                      <Edit3 className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span>{isEditMode ? 'Preview' : 'Edit'}</span>
+                    </button>
+                    <button
+                      data-testid="copy-button"
+                      onClick={handleCopy}
+                      className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-md sm:rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-medium text-xs sm:text-sm shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+                    >
+                      <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <span>Copy</span>
+                    </button>
+                  </div>
                 </div>
-                <textarea
-                  data-testid="generated-post-textarea"
-                  value={editedPost}
-                  onChange={(e) => setEditedPost(e.target.value)}
-                  rows={15}
-                  className="w-full p-4 sm:p-6 bg-transparent text-slate-200 whitespace-pre-wrap focus:outline-none focus:bg-white/5 transition-colors resize-none border-none text-sm sm:text-base"
-                  style={{ fontFamily: "'Manrope', sans-serif", lineHeight: '1.7' }}
-                />
+                
+                {isEditMode ? (
+                  <textarea
+                    data-testid="generated-post-textarea"
+                    value={editedPost}
+                    onChange={(e) => setEditedPost(e.target.value)}
+                    rows={15}
+                    className="w-full p-4 sm:p-6 bg-transparent text-slate-200 whitespace-pre-wrap focus:outline-none focus:bg-white/5 transition-colors resize-none border-none text-sm sm:text-base"
+                    style={{ fontFamily: "'Manrope', sans-serif", lineHeight: '1.7' }}
+                  />
+                ) : (
+                  <div 
+                    data-testid="generated-post-preview"
+                    className="w-full p-4 sm:p-6 bg-transparent text-slate-200 prose prose-invert prose-sm sm:prose-base max-w-none overflow-auto"
+                    style={{ fontFamily: "'Manrope', sans-serif" }}
+                  >
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        img: ({node, ...props}) => (
+                          <img 
+                            {...props} 
+                            className="rounded-lg shadow-lg max-w-full h-auto my-4"
+                            loading="lazy"
+                            alt={props.alt || 'LinkedIn post image'}
+                          />
+                        ),
+                        a: ({node, ...props}) => (
+                          <a 
+                            {...props} 
+                            className="text-cyan-400 hover:text-cyan-300 underline transition-colors"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          />
+                        ),
+                        p: ({node, ...props}) => (
+                          <p {...props} className="mb-4 leading-relaxed" />
+                        ),
+                        strong: ({node, ...props}) => (
+                          <strong {...props} className="text-white font-semibold" />
+                        ),
+                        em: ({node, ...props}) => (
+                          <em {...props} className="text-slate-300 italic" />
+                        ),
+                        ul: ({node, ...props}) => (
+                          <ul {...props} className="list-disc list-inside mb-4 space-y-2" />
+                        ),
+                        ol: ({node, ...props}) => (
+                          <ol {...props} className="list-decimal list-inside mb-4 space-y-2" />
+                        ),
+                        h1: ({node, ...props}) => (
+                          <h1 {...props} className="text-2xl sm:text-3xl font-bold mb-4 text-white" />
+                        ),
+                        h2: ({node, ...props}) => (
+                          <h2 {...props} className="text-xl sm:text-2xl font-bold mb-3 text-white" />
+                        ),
+                        h3: ({node, ...props}) => (
+                          <h3 {...props} className="text-lg sm:text-xl font-bold mb-2 text-white" />
+                        ),
+                        code: ({node, inline, ...props}) => 
+                          inline ? (
+                            <code {...props} className="bg-slate-800 text-cyan-400 px-1.5 py-0.5 rounded text-sm" />
+                          ) : (
+                            <code {...props} className="block bg-slate-800 text-cyan-400 p-4 rounded-lg overflow-x-auto text-sm" />
+                          ),
+                        blockquote: ({node, ...props}) => (
+                          <blockquote {...props} className="border-l-4 border-indigo-500 pl-4 italic text-slate-300 my-4" />
+                        ),
+                      }}
+                    >
+                      {editedPost}
+                    </ReactMarkdown>
+                  </div>
+                )}
               </motion.div>
             </motion.div>
           )}
