@@ -131,19 +131,9 @@ const PostGenerator = () => {
 
   const handleCopyForLinkedIn = async () => {
     try {
-      // Remove ALL markdown formatting for clean LinkedIn paste
-      let textToCopy = editedPost
-        .replace(/\*\*(.+?)\*\*/g, '$1') // Remove bold markdown
-        .replace(/\*(.+?)\*/g, '$1') // Remove italic markdown
-        .replace(/`(.+?)`/g, '$1') // Remove code markdown
-        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '') // Remove image markdown completely
-        .replace(/\[(.+?)\]\((.+?)\)/g, '$1 ($2)') // Convert links to text with URL
-        .replace(/^#+\s+/gm, '') // Remove headers
-        .replace(/\n{3,}/g, '\n\n') // Normalize spacing
-        .trim();
-      
-      await navigator.clipboard.writeText(textToCopy);
-      toast.success('Copied plain text! Format it in LinkedIn using the editor buttons. Upload images separately.', { duration: 6000 });
+      // Copy the exact text as-is (Unicode formatted, ready for LinkedIn)
+      await navigator.clipboard.writeText(editedPost);
+      toast.success('✓ Copied! Ready to paste in LinkedIn', { duration: 3000 });
     } catch (error) {
       toast.error('Failed to copy to clipboard');
     }
