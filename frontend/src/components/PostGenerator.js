@@ -26,20 +26,27 @@ const PostGenerator = () => {
 
   // Preprocess content to convert image URLs in lists to proper markdown images
   const preprocessContent = (content) => {
-    // Convert list items with image URLs to proper markdown images
-    // Pattern: "- General image: https://..." or "• General image: https://..."
-    let processed = content.replace(
-      /[-•]\s*(?:General image|DNS attack diagram|Screenshots?|Image|Photo):\s*(https?:\/\/[^\s\)]+)/gi,
-      (match, url) => `![Image](${url})`
-    );
+    if (!content) return '';
     
-    // Convert standalone image URLs in lists to markdown images
-    processed = processed.replace(
-      /[-•]\s*(https?:\/\/[^\s]+\.(jpg|jpeg|png|gif|webp|svg)(\?[^\s]*)?)/gi,
-      (match, url) => `![Image](${url})`
-    );
-    
-    return processed;
+    try {
+      // Convert list items with image URLs to proper markdown images
+      // Pattern: "- General image: https://..." or "• General image: https://..."
+      let processed = content.replace(
+        /[-•]\s*(?:General image|DNS attack diagram|Screenshots?|Image|Photo):\s*(https?:\/\/[^\s\)]+)/gi,
+        (match, url) => `![Image](${url})`
+      );
+      
+      // Convert standalone image URLs in lists to markdown images
+      processed = processed.replace(
+        /[-•]\s*(https?:\/\/[^\s]+\.(jpg|jpeg|png|gif|webp|svg)(\?[^\s]*)?)/gi,
+        (match, url) => `![Image](${url})`
+      );
+      
+      return processed;
+    } catch (error) {
+      console.error('Error preprocessing content:', error);
+      return content;
+    }
   };
 
   const validateUrl = (url) => {
