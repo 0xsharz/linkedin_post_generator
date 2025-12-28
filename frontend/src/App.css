@@ -95,11 +95,14 @@ body {
 }
 
 .prose code {
-  background-color: #1e293b;
+  background-color: rgba(30, 41, 59, 0.8);
   color: #22d3ee;
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
+  font-family: 'JetBrains Mono', monospace;
+  display: inline;
+  white-space: nowrap;
 }
 
 .prose pre {
