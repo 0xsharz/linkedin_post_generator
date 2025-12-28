@@ -415,7 +415,7 @@ const PostGenerator = () => {
                               ),
                           }}
                         >
-                          {preprocessContent(editedPost)}
+                          {editedPost}
                         </ReactMarkdown>
                       </div>
                     ) : (
