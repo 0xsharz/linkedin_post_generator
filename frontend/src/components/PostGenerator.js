@@ -21,48 +21,6 @@ const PostGenerator = () => {
   const [loadingTextIndex, setLoadingTextIndex] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
 
-  // Preprocess content to convert image URLs in lists to proper markdown images
-  const preprocessContent = (content) => {
-    if (!content) return '';
-    
-    try {
-      // Convert list items with image URLs to proper markdown images
-      let processed = content.replace(
-        /[-•]\s*(?:General image|DNS attack diagram|Screenshots?|Image|Photo|Workflow Setup|Edit Fields Node|Command Execution Output|Automated Tool CLI):\s*(https?:\/\/[^\s\)]+)/gi,
-        (match, url) => `\n\n![Image](${url.trim()})\n\n`
-      );
-      
-      // Convert standalone image URLs (with or without extensions)
-      processed = processed.replace(
-        /[-•]\s*(https?:\/\/[^\s]+\.(jpg|jpeg|png|gif|webp|svg)(\?[^\s]*)?)/gi,
-        (match, url) => `\n\n![Image](${url.trim()})\n\n`
-      );
-      
-      // Convert LinkedIn CDN image URLs
-      processed = processed.replace(
-        /(https?:\/\/media\.linkedin\.com\/dms\/image\/[^\s]+)/gi,
-        (match, url) => `\n\n![Image](${url.trim()})\n\n`
-      );
-      
-      // Convert other common CDN image patterns
-      processed = processed.replace(
-        /(https?:\/\/[^\s]*(?:cloudinary|imgur|googleusercontent|githubusercontent|unsplash|pexels)\.com\/[^\s]+)/gi,
-        (match, url) => {
-          // Only convert if it looks like an image URL
-          if (/(?:image|img|photo|picture|screenshot)/i.test(url) || /\.(jpg|jpeg|png|gif|webp|svg)/i.test(url)) {
-            return `\n\n![Image](${url.trim()})\n\n`;
-          }
-          return match;
-        }
-      );
-      
-      return processed;
-    } catch (error) {
-      console.error('Error preprocessing content:', error);
-      return content;
-    }
-  };
-
   const validateUrl = (url) => {
     try {
       new URL(url);
