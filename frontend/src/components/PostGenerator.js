@@ -134,24 +134,18 @@ const PostGenerator = () => {
 
   const handleCopy = async () => {
     try {
-      // Copy the rendered text content, not the markdown
-      const tempDiv = document.createElement('div');
-      const parser = new DOMParser();
+      // For LinkedIn, keep the markdown formatting but clean up image markdown
+      let textToCopy = editedPost;
       
-      // Convert markdown to plain text by removing markdown syntax
-      let textToCopy = editedPost
-        .replace(/\*\*(.+?)\*\*/g, '$1') // Remove bold
-        .replace(/\*(.+?)\*/g, '$1') // Remove italic
-        .replace(/`(.+?)`/g, '$1') // Remove inline code
-        .replace(/\[(.+?)\]\(.+?\)/g, '$1') // Remove links but keep text
-        .replace(/^#+\s+/gm, '') // Remove headers
-        .replace(/^\s*[-*+]\s+/gm, '') // Remove list markers
-        .replace(/^\s*\d+\.\s+/gm, '') // Remove numbered list markers
-        .replace(/^>\s+/gm, '') // Remove blockquote markers
-        .replace(/\n{3,}/g, '\n\n'); // Normalize multiple newlines
+      // Remove markdown image syntax but keep the URLs as links
+      textToCopy = textToCopy.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, 'Image: $2');
       
       await navigator.clipboard.writeText(textToCopy);
-      toast.success('Copied to clipboard!');
+      toast.success('Copied! Bold text will show as **text** in LinkedIn. Format manually or use LinkedIn\'s formatting buttons.', { duration: 5000 });
+    } catch (error) {
+      toast.error('Failed to copy to clipboard');
+    }
+  };
     } catch (error) {
       toast.error('Failed to copy to clipboard');
     }
