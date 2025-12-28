@@ -96,10 +96,6 @@ const PostGenerator = () => {
       toast.error('Failed to copy to clipboard');
     }
   };
-    } catch (error) {
-      toast.error('Failed to copy to clipboard');
-    }
-  };
 
   const handleReset = () => {
     setBlogUrl('');
