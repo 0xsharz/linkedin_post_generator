@@ -22,7 +22,6 @@ const PostGenerator = () => {
   const [editedPost, setEditedPost] = useState('');
   const [loadingTextIndex, setLoadingTextIndex] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
 
   // Preprocess content to convert image URLs in lists to proper markdown images
   const preprocessContent = (content) => {
