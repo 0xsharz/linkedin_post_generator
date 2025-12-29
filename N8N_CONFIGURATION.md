@@ -201,3 +201,4 @@ Import this json in the n8n workflow:
   "tags": []
 }
 ```
+Get free Gemini and firecrawl.dev API keys and set up the workflow.
