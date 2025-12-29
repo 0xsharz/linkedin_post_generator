@@ -1,14 +1,10 @@
 from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict, field_validator
-from typing import List, Optional
-import uuid
-from datetime import datetime, timezone
+from pydantic import BaseModel, field_validator
 import httpx
 import re
 
@@ -16,23 +12,15 @@ import re
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+# Initialize logging before it's used
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
-
-
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-    
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
-class StatusCheckCreate(BaseModel):
-    client_name: str
 
 class GeneratePostRequest(BaseModel):
     blog_url: str
@@ -45,6 +33,7 @@ class GeneratePostRequest(BaseModel):
         
         v = v.strip()
         
+        # URL pattern matches both http:// and https:// (the ? makes 's' optional)
         url_pattern = re.compile(
             r'^https?://'
             r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?|'
@@ -68,75 +57,79 @@ class GeneratePostResponse(BaseModel):
 async def root():
     return {"message": "LinkedIn Post Generator API"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
-
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    
-    return status_checks
+@api_router.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {
+        "status": "healthy",
+        "service": "LinkedIn Post Generator API"
+    }
 
 @api_router.post("/generate", response_model=GeneratePostResponse)
 async def generate_linkedin_post(request: GeneratePostRequest):
     """
-    Generate LinkedIn post from blog URL by calling n8n webhook
-    n8n webhook URL is kept server-side for security
+    Generate LinkedIn post from blog URL
+    All processing is done server-side for security
     """
+    logger.info(f"Received request to generate post for URL: {request.blog_url}")
+    
     try:
-        n8n_webhook_url = "https://n8n.xshz.me/webhook/linkgen"
+        # Post generation service URL - kept server-side for security
+        n8n_webhook_url = os.environ.get('N8N_WEBHOOK_URL', 'https://n8n.xshz.me/webhook/linkgen')
+        logger.info("Calling post generation service")
         
-        # Increased timeout to 180 seconds (3 minutes) for long-running n8n workflows
+        # Increased timeout to 180 seconds (3 minutes) for long-running workflows
         async with httpx.AsyncClient(timeout=180.0) as client:
-            response = await client.post(
-                n8n_webhook_url,
-                json={"blog_url": request.blog_url}
-            )
-            response.raise_for_status()
+            try:
+                response = await client.post(
+                    n8n_webhook_url,
+                    json={"blog_url": request.blog_url}
+                )
+                response.raise_for_status()
+            except httpx.ConnectError as e:
+                logger.error(f"Failed to connect to post generation service: {str(e)}")
+                raise HTTPException(
+                    status_code=503,
+                    detail="Unable to connect to the post generation service. Please check if the service is running."
+                )
+            except httpx.TimeoutException:
+                logger.error("Timeout connecting to post generation service")
+                raise
+            except httpx.HTTPStatusError as e:
+                logger.error(f"Post generation service returned error: {e.response.status_code} - {e.response.text[:200]}")
+                raise
             
             # Log the response for debugging
-            logger.info(f"n8n webhook response status: {response.status_code}")
-            logger.info(f"n8n webhook response body: {response.text[:500]}")
+            logger.info(f"Post generation service response status: {response.status_code}")
+            logger.info(f"Post generation service response body: {response.text[:500]}")
             
             # Check if response has content
             if not response.text or not response.text.strip():
                 raise HTTPException(
                     status_code=502, 
-                    detail="n8n webhook returned empty response. Please configure your n8n workflow to return JSON data with fields: post_body, hashtags, full_post"
+                    detail="Post generation service returned empty response. Please try again."
                 )
             
             try:
                 data = response.json()
             except ValueError as e:
-                logger.error(f"Failed to parse n8n response as JSON: {response.text[:200]}")
+                logger.error(f"Failed to parse response as JSON: {response.text[:200]}")
                 raise HTTPException(
                     status_code=502, 
-                    detail=f"n8n webhook returned invalid JSON. Response: {response.text[:100]}"
+                    detail="Post generation service returned invalid response. Please try again."
                 )
             
-            # Handle if n8n returns a list (take first item) or dict
+            # Handle if service returns a list (take first item) or dict
             if isinstance(data, list):
                 if len(data) == 0:
                     raise HTTPException(
                         status_code=502, 
-                        detail="n8n webhook returned an empty list"
+                        detail="Post generation service returned empty data. Please try again."
                     )
-                logger.info(f"n8n returned a list with {len(data)} items, using first item")
+                logger.info(f"Service returned a list with {len(data)} items, using first item")
                 data = data[0]
             
-            # Extract the output field (n8n format)
+            # Extract the output field
             output_text = data.get('output', '')
             
             # Extract fields from the response
@@ -144,7 +137,7 @@ async def generate_linkedin_post(request: GeneratePostRequest):
             hashtags = data.get('hashtags', data.get('tags', ''))
             full_post = data.get('full_post', data.get('content', ''))
             
-            # If we have output field (n8n format), use it
+            # If we have output field, use it
             if output_text:
                 full_post = output_text
                 # Try to extract hashtags from the output (lines starting with #)
@@ -170,7 +163,7 @@ async def generate_linkedin_post(request: GeneratePostRequest):
             if not full_post:
                 raise HTTPException(
                     status_code=502,
-                    detail=f"n8n webhook returned data but no recognizable content. Received fields: {list(data.keys())}"
+                    detail="Post generation service returned data but no recognizable content. Please try again."
                 )
             
             return GeneratePostResponse(
@@ -188,9 +181,9 @@ async def generate_linkedin_post(request: GeneratePostRequest):
         error_detail = "Unable to generate LinkedIn post"
         
         if e.response.status_code == 404:
-            error_detail = "n8n webhook is not available. Please ensure the webhook is activated in n8n workflow (not in test mode)."
+            error_detail = "Post generation service is not available. Please ensure the service is properly configured."
         elif e.response.status_code >= 500:
-            error_detail = "n8n service is currently unavailable. Please try again later."
+            error_detail = "Post generation service is currently unavailable. Please try again later."
         else:
             try:
                 error_data = e.response.json()
@@ -200,10 +193,15 @@ async def generate_linkedin_post(request: GeneratePostRequest):
         
         raise HTTPException(status_code=502, detail=error_detail)
     except httpx.RequestError as e:
+        logger.error(f"Request error connecting to post generation service: {str(e)}")
+        error_msg = f"Unable to connect to the post generation service. Error: {str(e)}"
         raise HTTPException(
             status_code=503, 
-            detail="Unable to connect to the post generation service. Please check your internet connection and try again."
+            detail=error_msg
         )
+    except HTTPException:
+        # Re-raise HTTPException instances so they propagate with their intended status codes
+        raise
     except Exception as e:
         logger.error(f"Unexpected error in generate_linkedin_post: {str(e)}")
         raise HTTPException(
@@ -222,13 +220,3 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"],
 )
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()

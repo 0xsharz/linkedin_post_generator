@@ -30,76 +30,47 @@ A modern, sleek web application that transforms any blog URL into a professional
 
 ### Backend
 - **FastAPI** - Python web framework
-- **Motor** - MongoDB async driver
 - **httpx** - HTTP client for n8n integration
 - **Pydantic** - Data validation
 
 ### Integration
 - **n8n** - Workflow automation for AI processing
-- **MongoDB** - Database (optional, for analytics)
 
 ## 📋 Prerequisites
 
-- Node.js 16+ and Yarn
+- Node.js 16+ and npm/yarn
 - Python 3.9+
 - n8n instance (for AI processing)
-- MongoDB (optional)
 
 ## 🚀 Quick Start
 
-### 1. Clone the Repository
+See [SETUP.md](./SETUP.md) for detailed installation guide.
+
+**Configuration Files:**
+- Backend: See [backend/ENV_CONFIG.md](./backend/ENV_CONFIG.md) for environment variables
+- Frontend: See [frontend/ENV_CONFIG.md](./frontend/ENV_CONFIG.md) for environment variables
+
+### Quick Install
 
 ```bash
-git clone https://github.com/yourusername/linkedin-post-generator.git
-cd linkedin-post-generator
-```
+# 1. Clone repository
+git clone <your-repo-url>
+cd linkedin_post_generator
 
-### 2. Backend Setup
-
-```bash
+# 2. Backend
 cd backend
 pip install -r requirements.txt
 
-# Configure environment variables
-cp .env.example .env
-# Edit .env with your MongoDB URL and other settings
-```
+# 3. Frontend
+cd ../frontend
+npm install --legacy-peer-deps
 
-**Backend Environment Variables** (`.env`):
-```env
-MONGO_URL=mongodb://localhost:27017
-DB_NAME=linkedin_generator
-CORS_ORIGINS=http://localhost:3000,https://yourdomain.com
-```
+# 4. Run (in separate terminals)
+# Terminal 1: Backend
+cd backend && uvicorn server:app --host 0.0.0.0 --port 8000 --reload
 
-### 3. Frontend Setup
-
-```bash
-cd frontend
-yarn install
-
-# Configure environment variables
-cp .env.example .env
-# Edit .env with your backend URL
-```
-
-**Frontend Environment Variables** (`.env`):
-```env
-REACT_APP_BACKEND_URL=http://localhost:8001
-```
-
-### 4. Start Development Servers
-
-**Backend:**
-```bash
-cd backend
-uvicorn server:app --host 0.0.0.0 --port 8001 --reload
-```
-
-**Frontend:**
-```bash
-cd frontend
-yarn start
+# Terminal 2: Frontend
+cd frontend && npm start
 ```
 
 Visit `http://localhost:3000` 🎉
@@ -116,10 +87,11 @@ The app requires an n8n workflow to process blog content into LinkedIn posts. Se
    - AI Node (OpenAI/Claude) - Generates LinkedIn post
    - Respond to Webhook - Returns formatted JSON
 
-2. **Update Webhook URL** in `backend/server.py`:
-   ```python
-   n8n_webhook_url = "https://n8n.xshz.me/webhook/linkgen"
+2. **Configure Webhook URL** in `backend/.env`:
+   ```env
+   N8N_WEBHOOK_URL=https://n8n.xshz.me/webhook/linkgen
    ```
+   See [backend/ENV_CONFIG.md](./backend/ENV_CONFIG.md) for details.
 
 3. **Expected n8n Response Format**:
    ```json
@@ -270,8 +242,6 @@ yarn build
 
 **Backend:**
 ```env
-MONGO_URL=mongodb+srv://user:pass@cluster.mongodb.net
-DB_NAME=prod_db
 CORS_ORIGINS=https://yourdomain.com
 ```
 

@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Copy, RefreshCw, Zap, Edit3 } from 'lucide-react';
+import { Sparkles, Copy, RefreshCw, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
 
 const loadingTexts = [
   'Reading blog...',
@@ -22,7 +20,6 @@ const PostGenerator = () => {
   const [editedPost, setEditedPost] = useState('');
   const [loadingTextIndex, setLoadingTextIndex] = useState(0);
   const [isFocused, setIsFocused] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
 
   const validateUrl = (url) => {
     try {
@@ -79,8 +76,10 @@ const PostGenerator = () => {
         errorMessage = 'Unable to connect to the service. Please check your connection and try again.';
       } else if (error.response?.data?.detail) {
         errorMessage = error.response.data.detail;
-      } else if (error.message === 'Network Error') {
+      } else if (error.message === 'Network Error' || error.code === 'ERR_NETWORK') {
         errorMessage = 'Network error. Please check your internet connection.';
+      } else if (error.code === 'ECONNREFUSED') {
+        errorMessage = 'Backend server is not running. Please start the backend server.';
       }
       
       toast.error(errorMessage, { duration: 5000 });
