@@ -14,7 +14,7 @@ Your n8n workflow should return JSON in this format:
 
 ## N8N flow configuration
 
-Expected response:
+Import this json in the n8n workflow:
 ```json
 {
   "name": "LinkedIn Post Generator from URL",
