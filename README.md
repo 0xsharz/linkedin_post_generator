@@ -2,6 +2,13 @@
 
 A modern, sleek web application that transforms any blog URL into a professional LinkedIn post using AI. Built with React, FastAPI, and n8n automation.
 
+## 📷 Screenshots
+
+[<img alt="alt_text" src="/Screenshots/frontend1.png" />]
+[<img alt="alt_text" src="/Screenshots/frontend2.png" />]
+[<img alt="alt_text" src="/Screenshots/n8n_workflow.png" />]
+
+
 ![LinkedIn Post Generator](https://img.shields.io/badge/Status-Production%20Ready-success)
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react)
