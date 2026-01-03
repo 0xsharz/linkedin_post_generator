@@ -344,6 +344,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Made with ❤️ by [0xsharz](https://github.com/yourusername](https://github.com/0xsharz/)
+Made with ❤️ by 0xsharz
 
 **Star ⭐ this repo if you find it helpful!**
