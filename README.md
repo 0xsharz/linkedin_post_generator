@@ -322,7 +322,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Built with [Emergent.sh](https://emergent.sh) platform
 - Inspired by the need for quick LinkedIn content creation
 - Powered by AI language models (GPT/Claude)
 - n8n for workflow automation
@@ -345,6 +344,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Made with ❤️ by [Your Name](https://github.com/yourusername)
+Made with ❤️ by [0xsharz](https://github.com/yourusername](https://github.com/0xsharz/)
 
 **Star ⭐ this repo if you find it helpful!**
